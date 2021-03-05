@@ -3,7 +3,7 @@
 #' Helper function to generate 2-way admixture under beta distribution.
 #' @param mean mean of ancestry
 #' @param sd sd of ancestry
-#' @n number of individuals
+#' @param n number of individuals
 #' @return A matrix of global ancestry percentages for n individuals
 #' @examples
 #' AncBetaOut(0.75, 0.01, 100)

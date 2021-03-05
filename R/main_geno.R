@@ -200,6 +200,7 @@ SimGenoPower <-function(n_snps=1000,
 
       if(var(pop2_genos[,i])!=0){
         glm_temp <-summary(glm(pop2_phenos~ pop2_genos[,i], family="binomial"))
+        p_2 <- c(p_2, glm_temp$coefficients[2, 4])
       }else{
         p_2 <- c(p_2, 1)
       }

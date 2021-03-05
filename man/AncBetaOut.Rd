@@ -9,6 +9,8 @@ AncBetaOut(mean, var, n)
 \arguments{
 \item{mean}{mean of ancestry}
 
+\item{n}{number of individuals}
+
 \item{sd}{sd of ancestry}
 }
 \value{

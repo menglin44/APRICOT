@@ -1,13 +1,19 @@
 Package: APRICOT
 Title: Admixed Population poweR Inference Computed for phenOtypic Traits
 Version: 0.0.0.9000
-Authors@R:c(
+Authors@R: c(
     person(given = "Meng",
            family = "Lin",
            role = c("aut", "cre"),
            email = "meng.lin@cuanschutz.edu"),
     person(given = "Danny",
            family = "Park",
+           role = c("ctb")),
+    person(given = "Noah",
+           family = "Zaitlen",
+           role = c("ctb")),
+    person(given = "Brenna",
+           family = "Henn",
            role = c("ctb")),
     person(given = "Christopher",
            family = "Gignoux",
