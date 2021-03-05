@@ -80,7 +80,7 @@ powphenanc <- function(incidence.rates,
 
 
   #iterations of associations
-  pb <- progress::progres_bar$new(format="Association iterations [:bar] :percent", total=n, clear=F, width=60)
+  pb <- progress::progress_bar$new(format="Association iterations [:bar] :percent", total=n, clear=F, width=60)
 
   for(i in c(1:n)){
 
