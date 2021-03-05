@@ -1,0 +1,22 @@
+Package: APRICOT
+Title: Admixed Population poweR Inference Computed for phenOtypic Traits
+Version: 0.0.0.9000
+Authors@R:c(
+    person(given = "Meng",
+           family = "Lin",
+           role = c("aut", "cre"),
+           email = "meng.lin@cuanschutz.edu"),
+    person(given = "Danny",
+           family = "Park",
+           role = c("ctb")),
+    person(given = "Christopher",
+           family = "Gignoux",
+           role = c("ctb")))
+Description: APRICOT provides a mechanistic simulation framework to estimate statistical power for GWAS discovery of causal variants. It sets in scenario of a 2-way admixed population and the corresponding populations of ancestral origins, and works for both quantitative and dichotomous traits. APRICOT also estimates phenotype-ancestry correlations seperately. See Lin et al., bioRxiv, 2021 for more details.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports:
+    progress
