@@ -8,7 +8,8 @@
 #' @param prop_causal Proportion of causal variant among total SNPs. Default is 0.1.
 #' @param hg2 Heritability of the trait. Default is 0.5.
 #' @param fst The baseline fixation index FST among causal variants between Pop 1 and Pop2. Default is 0.2.
-#' @param fst_constant True or False: Is FST among causal variants a constant value equaling the baseline (True) or have an increment with the rarity of ancestral minor allele frequency (False)? Default is False.
+#' @param fst_constant True or False: Is FST among causal variants a constant value equaling the baseline (True) or have an increment with the rarity of ancestral minor allele frequency (False)? Default is True.
+#' @param bg_fst Genomic background Fst value between 0 and 1 for non-causal variants. Default 'FALSE' to be set as the same as \code{fst}. If set to a value here, Fst of non-causal variants will be under this constant value.
 #' @param freqdist Frequency distribution of ancestral variants (prior to the divergence of Pop 1 and 2). "unif" for a uniform distribution modeling (default), "inverse" for an inverse distribution modeling.
 #' @param liability A vector of liability threshold for dichotomous traits in the admixed group, Pop 1, Pop2, respectively. If set as NA (default), the trait is assumed to be quantitative.
 #' @param aaf Limits (min, max) on the frequency distribution of ancestral variants. Default is c(0.001, 0.999).
@@ -34,7 +35,8 @@ SimGenoPower <-function(n_snps=1000,
                         prop_causal=0.1,
                         hg2=0.5,
                         fst=0.2,
-                        fst_constant=F,
+                        fst_constant=T,
+                        bg_fst=F,
                         freqdist="unif",
                         liability=NA,
                         aaf=c(1e-3, 0.999),
@@ -55,6 +57,7 @@ SimGenoPower <-function(n_snps=1000,
                                                                    Leave it as NA if for quantitative traits.")
   if (!envanc%in%c(0,1,2)) stop("Specify if environment by ancestry is modeled. 0: no. 1: gaussian. 2: linear.")
   if (envanc==2 & !(envvar>=0 & envvar<1)) stop("Specify the proportion of phenotypic variance explained by environment by ancestry (linear).")
+  if (bg_fst!=F & !(bg_fst>=0 & bg_fst<=1)) stop("Background Fst can either be a value between 0 and 1, or turned off as 'FALSE' to be the same as causal variants")
   ######################################
   #     draw ancestry and genotypes    #
   ######################################
@@ -72,9 +75,10 @@ SimGenoPower <-function(n_snps=1000,
   lanc_m <- matrix(rbinom(adx_idvs*n_snps, 1, ganc), nrow=adx_idvs, ncol=n_snps)
   lanc_pop1 <- lanc_p + lanc_m
 
-  #set freq per ancestral population at each locus, give fst and human ancestral allele maf
+  #set freq per ancestral population at each locus, given fst and human ancestral allele maf
   pop1.frqs <- rep(NA, n_snps)
   pop2.frqs <- rep(NA, n_snps)
+  causal_index <- sample(c(1:n_snps), size=round(n_snps*prop_causal), replace=F)
   for (s in 1:n_snps) {
     # set allele frequencies for ancestries
     p.pop1 <- 0
@@ -93,10 +97,13 @@ SimGenoPower <-function(n_snps=1000,
       Fst <- fst + (1-anc.maf)*0.3 # the smaller maf, the bigger fst
     }
 
+    if(bg_fst==F) bg_fst <- Fst # if causal and non-causal have the same fst
+    fst_snp <- c(bg_fst, Fst)[as.numeric(s%in%causal_index)+1] # Fst of this SNP
+    
     #Balding-Nichol model
     while((p.pop1 <= 0 || p.pop1 >= 1) || p.pop2 <= 0 || p.pop2 >= 1){
-      p.pop1 <- rbeta(1, anc.frq*(1-Fst)/Fst,(1-anc.frq)*(1-Fst)/Fst)
-      p.pop2 <- rbeta(1, anc.frq*(1-Fst)/Fst,(1-anc.frq)*(1-Fst)/Fst)
+      p.pop1 <- rbeta(1, anc.frq*(1-fst_snp)/fst_snp,(1-anc.frq)*(1-fst_snp)/fst_snp)
+      p.pop2 <- rbeta(1, anc.frq*(1-fst_snp)/fst_snp,(1-anc.frq)*(1-fst_snp)/fst_snp)
     }
     pop1.frqs[s] <- p.pop1
     pop2.frqs[s] <- p.pop2
@@ -123,7 +130,7 @@ SimGenoPower <-function(n_snps=1000,
   # effect size is tied to fst+ancestral maf
   # only causal variants are assigned with weights; assuming trait is inverse normalized
   #weights <- rbinom(n_snps,1,prop_causal) * rnorm(n_snps, 0, 1) * ((rbinom(n_snps, 1, pop1.frqs/(pop1.frqs+pop2.frqs))-0.5)*2)
-  causal_index <- sample(c(1:n_snps), size=round(n_snps*prop_causal), replace=F)
+  
   if_causal <- rep(0, n_snps)
   if_causal[causal_index]<-1
   weights <- if_causal * rnorm(n_snps, 0, 1) * ((rbinom(n_snps, 1, pop1.frqs/(pop1.frqs+pop2.frqs))-0.5)*2)

@@ -12,7 +12,8 @@ SimGenoPower(
   prop_causal = 0.1,
   hg2 = 0.5,
   fst = 0.2,
-  fst_constant = F,
+  fst_constant = T,
+  bg_fst = F,
   freqdist = "unif",
   liability = NA,
   aaf = c(0.001, 0.999),
@@ -36,7 +37,9 @@ SimGenoPower(
 
 \item{fst}{The baseline fixation index FST among causal variants between Pop 1 and Pop2. Default is 0.2.}
 
-\item{fst_constant}{True or False: Is FST among causal variants a constant value equaling the baseline (True) or have an increment with the rarity of ancestral minor allele frequency (False)? Default is False.}
+\item{fst_constant}{True or False: Is FST among causal variants a constant value equaling the baseline (True) or have an increment with the rarity of ancestral minor allele frequency (False)? Default is True.}
+
+\item{bg_fst}{Genomic background Fst value between 0 and 1 for non-causal variants. Default 'FALSE' to be set as the same as \code{fst}. If set to a value here, Fst of non-causal variants will be under this constant value.}
 
 \item{freqdist}{Frequency distribution of ancestral variants (prior to the divergence of Pop 1 and 2). "unif" for a uniform distribution modeling (default), "inverse" for an inverse distribution modeling.}
 
