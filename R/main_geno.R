@@ -112,9 +112,11 @@ SimGenoPower <-function(n_snps=1000,
 
   # set genotypes based on frequency
   #1. pop1 and pop2
+  #pop1_genos <- matrix(rbinom(n_snps*pop1_idvs, 1, pop1.frqs), byrow=T, nrow=pop1_idvs, ncol=n_snps) +
+  #  matrix(rbinom(n_snps*pop1_idvs, 1, pop1.frqs), byrow=T, nrow=adx_idvs, ncol=n_snps)
   pop1_genos <- matrix(rbinom(n_snps*pop1_idvs, 1, pop1.frqs), byrow=T, nrow=pop1_idvs, ncol=n_snps) +
-    matrix(rbinom(n_snps*pop1_idvs, 1, pop1.frqs), byrow=T, nrow=adx_idvs, ncol=n_snps)
-
+    matrix(rbinom(n_snps*pop1_idvs, 1, pop1.frqs), byrow=T, nrow=pop1_idvs, ncol=n_snps)
+  
   pop2_genos <- matrix(rbinom(n_snps*pop2_idvs, 1, pop2.frqs), byrow=T, nrow=pop2_idvs, ncol=n_snps) +
     matrix(rbinom(n_snps*pop2_idvs, 1, pop2.frqs), byrow=T, nrow=pop2_idvs, ncol=n_snps)
 
